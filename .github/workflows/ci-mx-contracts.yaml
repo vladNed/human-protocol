@@ -13,6 +13,7 @@ permissions:
 env:
   MX_DIR_PATH: packages/core/mx
   RUST_TOOLCHAIN: nightly-2022-12-08
+  CLIPPY_ARGS: --all-targets --all-features
 
 jobs:
   rust_test:
@@ -44,5 +45,5 @@ jobs:
         env:
           RUSTFLAGS: ""
         with:
-          github_token: ${{ secrets.token }}
-          clippy_flags: ${{ inputs.clippy-args }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          clippy_flags: ${{ env.CLIPPY_ARGS }}
