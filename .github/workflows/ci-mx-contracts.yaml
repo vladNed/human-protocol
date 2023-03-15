@@ -4,8 +4,37 @@ on:
   push:
     branches:
       - 'main'
+    inputs:
+      rust-toolchain:
+        description: 'Rust toolchain to use'
+        default: 'nightly-2022-12-08'
+        required: false
+        type: string
+      vmtools-version:
+        description: 'vmtools version to use'
+        default: 'latest'
+        required: false
+        type: string
+      pip-mxpy-args:
+        description: 'pip mxpy install arguments'
+        default: 'multiversx-sdk-cli==v6.0.0'
+        required: false
+        type: string
+      clippy-args:
+        description: 'cargo clippy arguments'
+        default: '--all-targets --all-features'
+        required: false
+        type: string
+      install-libtinfo5:
+        description: 'install libtinfo5'
+        default: false
+        required: false
+        type: boolean
+    secrets:
+      token:
+        description: 'Github token'
+        required: true
   pull_request:
-  workflow_run:
     inputs:
       rust-toolchain:
         description: 'Rust toolchain to use'
@@ -36,6 +65,7 @@ on:
       token:
         description: 'Github token'
         required: true
+
 
 defaults:
   run:
