@@ -4,68 +4,13 @@ on:
   push:
     branches:
       - 'main'
-    inputs:
-      rust-toolchain:
-        description: 'Rust toolchain to use'
-        default: 'nightly-2022-12-08'
-        required: false
-        type: string
-      vmtools-version:
-        description: 'vmtools version to use'
-        default: 'latest'
-        required: false
-        type: string
-      pip-mxpy-args:
-        description: 'pip mxpy install arguments'
-        default: 'multiversx-sdk-cli==v6.0.0'
-        required: false
-        type: string
-      clippy-args:
-        description: 'cargo clippy arguments'
-        default: '--all-targets --all-features'
-        required: false
-        type: string
-      install-libtinfo5:
-        description: 'install libtinfo5'
-        default: false
-        required: false
-        type: boolean
-    secrets:
-      token:
-        description: 'Github token'
-        required: true
   pull_request:
-    inputs:
-      rust-toolchain:
-        description: 'Rust toolchain to use'
-        default: 'nightly'
-        required: false
-        type: string
-      vmtools-version:
-        description: 'vmtools version to use'
-        default: 'latest'
-        required: false
-        type: string
-      pip-mxpy-args:
-        description: 'pip mxpy install arguments'
-        default: 'multiversx-sdk-cli==v6.0.0'
-        required: false
-        type: string
-      clippy-args:
-        description: 'cargo clippy arguments'
-        default: '--all-targets --all-features'
-        required: false
-        type: string
-      install-libtinfo5:
-        description: 'install libtinfo5'
-        default: false
-        required: false
-        type: boolean
-    secrets:
-      token:
-        description: 'Github token'
-        required: true
 
+env:
+  RUST_TOOLCHAIN: nightly-2022-12-08
+  VMTOOLS_VERSION: v1.4.60
+  PIP_MXPY_ARGS: multiversx-sdk-cli==v6.0.0
+  CLIPPY_ARGS: --all-targets --all-features
 
 defaults:
   run:
@@ -81,7 +26,7 @@ jobs:
       - name: Install rust
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          toolchain: ${{ inputs.rust-toolchain }}
+          toolchain: ${{ env.RUST_TOOLCHAIN }}
           target: wasm32-unknown-unknown
 
       - name: Setup the PATH variable
@@ -89,21 +34,15 @@ jobs:
 
       - name: Install prerequisites
         run: |
-          pip3 install ${{ inputs.pip-mxpy-args }}
+          pip3 install ${{ env.PIP_MXPY_ARGS }}
           mkdir $HOME/multiversx-sdk
-          python3 -m multiversx_sdk_cli.cli deps install vmtools --tag ${{ inputs.vmtools-version }}
+          python3 -m multiversx_sdk_cli.cli deps install vmtools --tag ${{ env.VMTOOLS_VERSION }}
           sudo apt install -y binaryen=105-1
           sudo apt install -y wabt=1.0.27-1
 
           cargo install twiggy
 
           cargo install multiversx-sc-meta
-
-      - name: Install libtinfo5
-        if: inputs.install-libtinfo5
-        run: |
-          sudo apt update
-          sudo apt install -y libtinfo5
 
       - name: Build the wasm contracts
         env:
@@ -194,7 +133,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          toolchain: ${{ inputs.rust-toolchain }}
+          toolchain: ${{ env.RUST_TOOLCHAIN }}
 
       - name: Run the rust tests
         env:
@@ -209,11 +148,11 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          toolchain: ${{ inputs.rust-toolchain }}
+          toolchain: ${{ env.RUST_TOOLCHAIN }}
           components: clippy
       - uses: giraffate/clippy-action@v1
         env:
           RUSTFLAGS: ""
         with:
-          github_token: ${{ secrets.token }}
-          clippy_flags: ${{ inputs.clippy-args }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          clippy_flags: ${{ env.CLIPPY_ARGS}}
