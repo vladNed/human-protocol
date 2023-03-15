@@ -10,12 +10,9 @@ permissions:
   checks: write
   pull-requests: write
 
-env:
-  MX_DIR_PATH: ./packaging/core/mx
-
 defaults:
   run:
-    working-directory: ${{ env.MX_DIR_PATH }}
+    working-directory: ./packaging/core/mx
 
 jobs:
   contracts:
