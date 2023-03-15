@@ -13,11 +13,12 @@ permissions:
 env:
   MX_DIR_PATH: ./packaging/core/mx
 
+defaults:
+  run:
+    working-directory: ${{ env.MX_DIR_PATH }}
+
 jobs:
   contracts:
-    defaults:
-      run:
-        working-directory: ${{ env.MX_DIR_PATH }}
 
     name: Contracts
     uses: multiversx/mx-sc-actions/.github/workflows/contracts.yml@v2
