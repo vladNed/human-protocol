@@ -10,13 +10,8 @@ permissions:
   checks: write
   pull-requests: write
 
-defaults:
-  run:
-    working-directory: ./packaging/core/mx
-
 jobs:
   contracts:
-
     name: Contracts
     uses: multiversx/mx-sc-actions/.github/workflows/contracts.yml@v2
     with:
@@ -24,3 +19,4 @@ jobs:
       vmtools-version: v1.4.60
     secrets:
       token: ${{ secrets.GITHUB_TOKEN }}
+    working-directory: ./packaging/core/mx/
